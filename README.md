@@ -8,6 +8,12 @@
 
 支持在页面中选中文字,右键一键发送到mblog.
 
+也支持先编辑,再发送.
+
 目前不支持图片一键发送.
 
 一键发送的默认可见性是当前用户的默认可见性.
+
+### 安装
+
+点[这里](https://github.com/mblog-backend/browser-plugin/releases)下载zip压缩包,根据[这里](https://www.jianshu.com/p/4f1fa54a5501)进行安装
