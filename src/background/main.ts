@@ -20,15 +20,31 @@ browser.contextMenus.create({
   contexts: ['selection'],
 })
 
+browser.contextMenus.create({
+  id: 'send2mblogEdit',
+  type: 'normal',
+  title: '发送到mblog-先编辑',
+  contexts: ['selection'],
+})
+
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'send2mblog')
-    sendMessage('send-to-mblog', { title: tab?.title }, `content-script@${tab?.id}`)
+    sendMessage('send-to-mblog', { }, `content-script@${tab?.id}`)
+  else if (info.menuItemId === 'send2mblogEdit')
+    sendMessage('send-to-mblog', { edit: true }, `content-script@${tab?.id}`)
 })
-const previousTabId = 0
 
 onMessage('post-to-mblog', async ({ data }) => {
   if (!data.url && !data.token)
     return
+  if (data.edit) {
+    await browser.storage.local.set({
+      content: data.content,
+    })
+    // await browser.tabs.create({url:"dist/popup/index.html"});
+    // sendMessage('send-to-edit-mblog', {}, 'popup')
+    return
+  }
 
   const result = await fetch(`${data.url}/api/user/current`, {
     method: 'POST',
@@ -38,7 +54,6 @@ onMessage('post-to-mblog', async ({ data }) => {
     },
   })
   const json = await result.json()
-  console.log(json, 'jsonjson')
 
   const visibility = json.data.defaultVisibility
 

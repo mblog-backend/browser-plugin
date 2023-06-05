@@ -14,12 +14,12 @@ import { onMessage, sendMessage } from 'webext-bridge/content-script'
 
   // })
 
-  onMessage('send-to-mblog', async () => {
+  onMessage('send-to-mblog', async ({ data }) => {
     const content = window?.getSelection()?.toString()
     if (content != null && content.trim() !== '') {
       console.log('send-to-mblog', content)
       browser.storage.sync.get(['url', 'token', 'connectSuccess']).then((result) => {
-        sendMessage('post-to-mblog', { content, url: result.url, token: result.token }, 'background')
+        sendMessage('post-to-mblog', { content, url: result.url, token: result.token, edit: data?.edit }, 'background')
       })
     }
   })

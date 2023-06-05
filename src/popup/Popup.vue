@@ -58,7 +58,7 @@ const save = () => {
           更换秘钥
         </n-button>
       </div>
-      <MemoInput :connect-success="connectSuccess" />
+      <MemoInput />
     </main>
   </NConfigProvider>
 </template>

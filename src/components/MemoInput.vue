@@ -7,9 +7,6 @@ import 'emoji-picker-element'
 import { useMyFetch } from '~/api/fetch'
 import { updateTokenBus } from '~/event/event'
 
-const props = defineProps<{
-  connectSuccess: boolean
-}>()
 const tags = ref<Array<MentionOption>>()
 const memoSaveParam: MemoSaveParam = reactive({
   visibility: 'PUBLIC',
@@ -44,8 +41,9 @@ updateTokenBus.on(() => {
 })
 
 onMounted(async () => {
-  if (!props.connectSuccess)
-    disbaled.value = true
+  const { content } = await browser.storage.local.get(['content'])
+  if (content)
+    memoSaveParam.content = content
 
   memoSaveParam.visibility = userinfo.value.defaultVisibility || 'PUBLIC'
   memoSaveParam.enableComment = userinfo.value.defaultEnableComment === 'true' ? '1' : '0'
@@ -109,8 +107,10 @@ const saveMemo = async () => {
     disbaled.value = false
   }, 3000)
   const { connectSuccess } = await browser.storage.sync.get(['connectSuccess'])
-  if (!connectSuccess)
+  if (!connectSuccess) {
     message.warning('请先连接MBlog')
+    disbaled.value = true
+  }
 
   const saveUrl = memoSaveParam.id ? '/api/memo/update' : '/api/memo/save'
   memoSaveParam.enableComment = parseInt(memoSaveParam.enableComment as any)
@@ -118,6 +118,7 @@ const saveMemo = async () => {
   if (!error.value) {
     exitEdit()
     message.success('记录成功！')
+    await browser.storage.local.clear()
   }
 }
 

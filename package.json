@@ -1,6 +1,6 @@
 {
   "name": "mblog-browser-plugin",
-  "displayName": "Browser plugin for MBlog",
+  "displayName": "MBlog插件",
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.3.1",
@@ -29,6 +29,9 @@
     "test:e2e": "playwright test",
     "postinstall": "simple-git-hooks",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "emoji-picker-element": "^1.17.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.36.0",
@@ -77,8 +80,5 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
-  },
-  "dependencies": {
-    "emoji-picker-element": "^1.17.0"
   }
 }
